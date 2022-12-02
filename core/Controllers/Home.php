@@ -5,22 +5,51 @@ namespace Controllers;
 class Home
 {
     /**
-     * afficher home
+     * 
+     * Wiew index
+     * @method : get
+     * 
      */
     public function index()
     {
 
-        $titreDeLaPage = "Home Page";
+        $message = "Bienvenue dans l'API Useritium pour TyroServ";
 
-        $message = "Bienvenue dans la documentation";
-        $messageChange = "je suis un message que tu peut changez";
+        header('Access-Control-Allow-Origin: *');
+        echo json_encode($message);
+    }
 
-        if (!empty($_POST['messageChange'])){
-            $messageChange = $_POST['messageChange'];
+    /**
+     * 
+     * Connect TyroServ Launcher
+     * @method : post
+     * 
+     */
+    public function connect(){
+
+        if(!empty($_POST['email_usertium']) && !empty($_POST['mdp_usertium'])){
+
+        
+
+            $email_auth = $_POST['email_usertium'];
+            $mdp_auth = $_POST['mdp_usertium'];
+
+
+
+
+        } else {
+
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode("Erreur");
+
         }
 
-        \Rendering::render("home/home", compact('message', 'messageChange', 'titreDeLaPage'));
+
 
     }
+
+
+
+
 }
 

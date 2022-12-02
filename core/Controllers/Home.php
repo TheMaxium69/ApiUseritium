@@ -33,6 +33,16 @@ class Home
 
             $email_auth = $_POST['email_usertium'];
             $mdp_auth = $_POST['mdp_usertium'];
+            
+            
+
+
+
+
+
+
+
+            
 
 
 

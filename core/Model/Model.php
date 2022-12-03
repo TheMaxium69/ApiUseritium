@@ -7,10 +7,12 @@ namespace Model;
 abstract class Model
 {
     protected $pdo;
+    protected $salt;
     protected $table;
 
     public function __construct(){
          $this->pdo = \Database::getPdo();
+         $this->salt = \DataBase::getSalt();
     }
 
 

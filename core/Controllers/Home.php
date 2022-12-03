@@ -2,8 +2,11 @@
 
 namespace Controllers;
 
-class Home
+class Home extends Controller
 {
+
+    protected $modelName = \Model\Users::class;
+
     /**
      * 
      * Wiew index
@@ -30,13 +33,19 @@ class Home
         if(!empty($_POST['email_usertium']) && !empty($_POST['mdp_usertium']))
         {
 
+            var_dump("POST ALL", $_POST);
+
             $email_auth = $_POST['email_usertium'];
             $mdp_auth = $_POST['mdp_usertium'];
+
+            $userLoad = $this->model->findByEmail($email_auth);
             
-            
+            var_dump("User LOAD",$userLoad);
+
+            $mdpCrypt_auth = $this->model->chiffreMdp($mdp_auth);
 
 
-
+            var_dump($mdpCrypt_auth);
 
 
 

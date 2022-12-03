@@ -49,11 +49,7 @@ class Home extends Controller
 
 
 
-
             
-
-
-
 
         } else {
 
@@ -61,9 +57,6 @@ class Home extends Controller
             echo json_encode("Erreur");
 
         }
-
-
-
     }
 
 

@@ -47,10 +47,9 @@ class Users extends Model
         $passwordCrypt = md5($passwordAuth);
         $passwordCryptSalt = $passwordCrypt.md5($key);
 
-        return $key;
+        return $passwordCryptSalt;
 
     }
-
 
 
 

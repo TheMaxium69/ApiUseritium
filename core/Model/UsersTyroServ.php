@@ -17,7 +17,22 @@ class UsersTyroServ extends Model
     public $auth_date;
 
 
+    /**
+     * 
+     * FindByIdUsers
+     * 
+     */
+    function findByIdUsers($idUsers)
+    {
+        $resultat =  $this->pdo->prepare('SELECT * FROM users_tyroserv WHERE idUsers = :idUsers');
+        $resultat->execute([
+            "idUsers"=> $idUsers
+        ]);
 
+        $userTyroServ = $resultat->fetchObject();
+
+        return $userTyroServ;
+    }
 
 
 

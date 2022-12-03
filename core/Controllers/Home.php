@@ -27,9 +27,8 @@ class Home
      */
     public function connect(){
 
-        if(!empty($_POST['email_usertium']) && !empty($_POST['mdp_usertium'])){
-
-        
+        if(!empty($_POST['email_usertium']) && !empty($_POST['mdp_usertium']))
+        {
 
             $email_auth = $_POST['email_usertium'];
             $mdp_auth = $_POST['mdp_usertium'];

@@ -61,14 +61,25 @@ class TyroServ extends Controller
                     // debug
                     var_dump("User LOAD TyroServ", $userTyroServLoad);
 
+                    if($userTyroServLoad){
 
+                        date_default_timezone_set('Europe/Paris');
+                        $dateAuth = date('d-m-y h:i:s A');
+                        
+                        $resultNewConnexion = $this->model2->newConnexion($dateAuth, $userTyroServLoad->auth_nb, $userTyroServLoad->auth_date);
+                        
+                        $nbAuthChiffre = /*$this->model3->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $resultNewConnexion["newNbAuth"];
+                        $tokenChiffre = /*$this->model3->publicChiffre($userTyroServLoad->token);*/ $userTyroServLoad->token;
 
+                        $resultLauncher = ["pseudo" => $userTyroServLoad->pseudo, 
+                                           "sanction"=> $userTyroServLoad->sanction, 
+                                           "token"=> $tokenChiffre,
+                                           "tokenTwo"=> $nbAuthChiffre,];
+                        
+                        header('Access-Control-Allow-Origin: *');
+                        echo json_encode(["status"=>"true","why"=>"first connexion","task"=>"firstConnect","result"=>$resultLauncher]);
 
-
-
-
-
-                    if($userTyroServLoad == false){
+                    } else {
 
                         header('Access-Control-Allow-Origin: *');
                         echo json_encode(["status"=>"true","why"=>"first connexion","task"=>"firstConnect"]);
@@ -107,6 +118,7 @@ class TyroServ extends Controller
      */
     public function firstConnect()
     {
+
     
     
     }

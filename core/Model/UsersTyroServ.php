@@ -15,6 +15,7 @@ class UsersTyroServ extends Model
     public $sanction;
     public $auth_nb;
     public $auth_date;
+    private $auth_token;
 
 
     /**
@@ -32,6 +33,55 @@ class UsersTyroServ extends Model
         $userTyroServ = $resultat->fetchObject();
 
         return $userTyroServ;
+    }
+
+    /**
+     * 
+     * NewConnexion
+     * 
+     */
+    function newConnexion($date, $oldNbAuth, $oldDateJson)
+    {
+
+        var_dump($oldDateJson);
+
+        if($oldDateJson != false && $oldDateJson != "{}"){
+
+            $oldDate = json_decode($oldDateJson, true);
+
+            $countDateJson = count($oldDate);
+
+            $oldDate[$countDateJson + 1] = $date;
+         
+        } else {
+
+            $oldDate = ["1" => $date];
+
+        }
+
+        // JSON DATE
+        $newDateJson = json_encode($oldDate);
+        // NB AUTH
+        $newNbAuth = $oldNbAuth + 1;
+
+
+        // insert bdd
+
+        $requestResult = 1;
+
+        if($requestResult){
+
+            $result = ["requeste" => "1", "newNbAuth" => $newNbAuth];
+
+        } else {
+
+            $result = ["requeste" => "0"];
+            
+        }
+
+        return $result;
+
+
     }
 
 

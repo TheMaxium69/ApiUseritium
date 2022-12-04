@@ -40,10 +40,8 @@ class UsersTyroServ extends Model
      * NewConnexion
      * 
      */
-    function newConnexion($date, $oldNbAuth, $oldDateJson)
+    function newConnexion($date, $oldNbAuth, $oldDateJson, $id)
     {
-
-        var_dump($oldDateJson);
 
         if($oldDateJson != false && $oldDateJson != "{}"){
 
@@ -66,18 +64,16 @@ class UsersTyroServ extends Model
 
 
         // insert bdd
+        $requestUpdate = $this->pdo->prepare("UPDATE users_tyroserv SET auth_nb = :newNbAuth , auth_date = :newDateJson WHERE idTyroServ = :id");
 
-        $requestResult = 1;
+        $requestUpdate->execute([
+            'id' => $id,
+            'newNbAuth' => $newNbAuth,
+            'newDateJson' => $newDateJson
+        ]);
 
-        if($requestResult){
+        $result = ["requeste" => "1", "newNbAuth" => $newNbAuth];
 
-            $result = ["requeste" => "1", "newNbAuth" => $newNbAuth];
-
-        } else {
-
-            $result = ["requeste" => "0"];
-            
-        }
 
         return $result;
 

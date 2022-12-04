@@ -66,7 +66,7 @@ class TyroServ extends Controller
                         date_default_timezone_set('Europe/Paris');
                         $dateAuth = date('d-m-y h:i:s A');
                         
-                        $resultNewConnexion = $this->model2->newConnexion($dateAuth, $userTyroServLoad->auth_nb, $userTyroServLoad->auth_date);
+                        $resultNewConnexion = $this->model2->newConnexion($dateAuth, $userTyroServLoad->auth_nb, $userTyroServLoad->auth_date, $userTyroServLoad->idTyroServ);
                         
                         $nbAuthChiffre = /*$this->model3->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $resultNewConnexion["newNbAuth"];
                         $tokenChiffre = /*$this->model3->publicChiffre($userTyroServLoad->token);*/ $userTyroServLoad->token;

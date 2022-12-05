@@ -32,34 +32,21 @@ class TyroServ extends Controller
     public function connect()
     {
 
-        // debug
-        var_dump("POST ALL", $_POST);
-
-        if(!empty($_POST['email_usertium']) && !empty($_POST['mdp_usertium']))
+        if(!empty($_POST['email_useritium']) && !empty($_POST['mdp_useritium']))
         {
 
+            $email_auth = $_POST['email_useritium'];
+            $mdp_auth = $_POST['mdp_useritium'];
 
-            $email_auth = $_POST['email_usertium'];
-            $mdp_auth = $_POST['mdp_usertium'];
-
-            $userLoad = $this->model->findByEmail($email_auth);
-            
-            // debug
-            var_dump("User LOAD",$userLoad);
+            $userLoad = $this->model->findByEmail($email_auth);       
 
             if (!empty($userLoad)){
 
                 $mdpCrypt_auth = $this->model->chiffreMdp($mdp_auth);
-                
-                // debug
-                var_dump("Mdp Auth", $mdpCrypt_auth);
 
                 if($mdpCrypt_auth == $userLoad->password){
                     
                     $userTyroServLoad = $this->model2->findByIdUsers($userLoad->id);
-                    
-                    // debug
-                    var_dump("User LOAD TyroServ", $userTyroServLoad);
 
                     if($userTyroServLoad){
 
@@ -123,6 +110,82 @@ class TyroServ extends Controller
     
     }
 
+    /**
+     * 
+     * Verification Serveur
+     * @method : post
+     * 
+     */
+    public function servVerif()
+    {
+
+        if(!empty($_POST['pseudo']) && !empty($_POST['token'])  && !empty($_POST['tokenTwo']))
+        {
+            $isNbVerif = false;
+            $isTokenVerif = false;
+
+            $pseudo = $_POST['pseudo'];
+            $auth_tokenChiffre = $_POST['token'];
+            $auth_nbChiffre = $_POST['tokenTwo'];
+
+            $userTyroServLoad = $this->model2->findByPseudo($pseudo);
+            var_dump($userTyroServLoad);
+
+            $nbChiffre = /*$this->model3->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $userTyroServLoad->auth_nb;
+            $tokenChiffre = /*$this->model3->publicChiffre($userTyroServLoad->token);*/ $userTyroServLoad->token;
+            var_dump($nbChiffre, $tokenChiffre);
+
+            if($auth_nbChiffre == $nbChiffre){ $isNbVerif = true; }
+
+            if($auth_tokenChiffre == $tokenChiffre){ $isTokenVerif = true; }
+
+            if($isTokenVerif == true && $isNbVerif == true){ $reponse = ["status"=>"true","auth_pseudo"=>$pseudo]; }
+            else {
+
+                if($isNbVerif == true) {
+
+                    $reponse = ["status"=>"err",
+                                "why"=>[
+                                    "Token"=> "false",
+                                    "AuthNb" => "true"
+                                ]
+                            ];
+
+                } else if($isTokenVerif == true) {
+
+                    $reponse = ["status"=>"err",
+                                "why"=>[
+                                    "Token"=> "true",
+                                    "AuthNb" => "false"
+                                ]
+                            ];
+
+                } else {
+
+                    $reponse = ["status"=>"err",
+                                "why"=>[
+                                    "Token"=> "false",
+                                    "AuthNb" => "false"
+                                ]
+                            ];
+
+                } 
+
+            }
+            
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode($reponse);
+
+        } else {
+
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
+
+        }
+
+    
+    
+    }
 
 
 

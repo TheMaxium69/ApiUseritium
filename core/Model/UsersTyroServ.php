@@ -15,7 +15,7 @@ class UsersTyroServ extends Model
     public $sanction;
     public $auth_nb;
     public $auth_date;
-    private $auth_token;
+    private $token;
 
 
     /**
@@ -28,6 +28,23 @@ class UsersTyroServ extends Model
         $resultat =  $this->pdo->prepare('SELECT * FROM users_tyroserv WHERE idUsers = :idUsers');
         $resultat->execute([
             "idUsers"=> $idUsers
+        ]);
+
+        $userTyroServ = $resultat->fetchObject();
+
+        return $userTyroServ;
+    }
+
+    /**
+     * 
+     * FindByPseudo
+     * 
+     */
+    function findByPseudo($pseudo)
+    {
+        $resultat =  $this->pdo->prepare('SELECT * FROM users_tyroserv WHERE pseudo = :pseudo');
+        $resultat->execute([
+            "pseudo"=> $pseudo
         ]);
 
         $userTyroServ = $resultat->fetchObject();

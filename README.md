@@ -1,6 +1,6 @@
-# ApiUsertium-TyroServ 
+# ApiUsertium
 
-Il s'agit de l'API des comptes Useritium, pour la 3eme Saison de TyroServ 
+Il s'agit de l'API des comptes Useritium, pour les projets externe qui utilise Useritium
 
-https://useritium.fr/api-externe/tyroserv/
+https://useritium.fr/api-externe/
 

@@ -56,21 +56,79 @@ class TyroServ extends Controller
                         
                         $resultNewConnexion = $this->ts_user->newConnexion($dateAuth, $userTyroServLoad->auth_nb, $userTyroServLoad->auth_date, $userTyroServLoad->idTyroServ);
                         
-                        $nbAuthChiffre = /*$this->ts_token->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $resultNewConnexion["newNbAuth"];
-                        $tokenChiffre = /*$this->ts_token->publicChiffre($userTyroServLoad->token);*/ $userTyroServLoad->token;
+                        $nbAuthChiffre = $this->ts_token->publicChiffre($resultNewConnexion["newNbAuth"]);
+                        $tokenChiffre = $this->ts_token->publicChiffre($userTyroServLoad->token);
 
                         $resultLauncher = ["pseudo" => $userTyroServLoad->pseudo, 
                                            "sanction"=> $userTyroServLoad->sanction, 
-                                           "token"=> $tokenChiffre,
-                                           "tokenTwo"=> $nbAuthChiffre,];
+                                           "token"=> $tokenChiffre['current'],
+                                           "tokenTwo"=> $nbAuthChiffre['current'],];
                         
                         header('Access-Control-Allow-Origin: *');
                         echo json_encode(["status"=>"true","result"=>$resultLauncher]);
 
                     } else {
 
-                        header('Access-Control-Allow-Origin: *');
-                        echo json_encode(["status"=>"true","why"=>"first connexion","task"=>"controller=tyroserv&task=firstConnect"]);
+                        // First Connexion
+                        if(!empty($_POST['pseudo_tyroserv'])){
+
+
+                            $idUsers = $userLoad->id;
+                            $pseudo = $_POST['pseudo_tyroserv'];
+                            $sanction = "{}";
+                            $auth_nb = 0;
+                            $auth_date = "{}";
+                            $token = base_convert(hash('sha256', time() . mt_rand()), 16, 36);
+
+                            if($this->ts_user->findByPseudo($pseudo)){
+
+                                header('Access-Control-Allow-Origin: *');
+                                echo json_encode(["status"=>"err","why"=>"pseudo exists"]);
+
+                            } else {
+
+                                $newUserTS = [$idUsers, $pseudo, $sanction, $auth_nb, $auth_date, $token];
+                                $this->ts_user->createUser($newUserTS);
+  
+                                $newUserTyroServLoad = $this->ts_user->findByIdUsers($idUsers);
+                                
+                                if($newUserTyroServLoad){
+
+                                    date_default_timezone_set('Europe/Paris');
+                                    $dateAuth = date('d-m-y h:i:s A');
+                                    
+                                    $resultNewConnexion = $this->ts_user->newConnexion($dateAuth, $newUserTyroServLoad->auth_nb, $newUserTyroServLoad->auth_date, $newUserTyroServLoad->idTyroServ);
+                                    
+                                    $nbAuthChiffre = $this->ts_token->publicChiffre($resultNewConnexion["newNbAuth"]);
+                                    $tokenChiffre = $this->ts_token->publicChiffre($newUserTyroServLoad->token);
+            
+                                    $resultLauncher = ["pseudo" => $newUserTyroServLoad->pseudo, 
+                                                       "sanction"=> $newUserTyroServLoad->sanction, 
+                                                       "token"=> $tokenChiffre['current'],
+                                                       "tokenTwo"=> $nbAuthChiffre['current'],];
+                                    
+                                    header('Access-Control-Allow-Origin: *');
+                                    echo json_encode(["status"=>"true","why"=>"account created successfully","result"=>$resultLauncher]);
+            
+                                } else {
+
+                                    
+                                    header('Access-Control-Allow-Origin: *');
+                                    echo json_encode(["status"=>"err","why"=>"bdd erreur"]);
+
+
+                                }
+
+
+                            }
+
+                        } else {
+                            
+                            header('Access-Control-Allow-Origin: *');
+                            echo json_encode(["status"=>"true","why"=>"first connexion","require"=>"post:pseudo_tyroserv","keep"=> $userLoad->username]);
+
+                        }
+
 
                     }
 
@@ -100,19 +158,6 @@ class TyroServ extends Controller
 
     /**
      * 
-     * First Connect TyroServ Launcher
-     * @method : post
-     * 
-     */
-    public function firstConnect()
-    {
-
-    
-    
-    }
-
-    /**
-     * 
      * Verification Serveur
      * @method : post
      * 
@@ -130,13 +175,11 @@ class TyroServ extends Controller
             $auth_nbChiffre = $_POST['tokenTwo'];
 
             $userTyroServLoad = $this->ts_user->findByPseudo($pseudo);
-            var_dump($userTyroServLoad);
 
-            $nbChiffre = /*$this->ts_token->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $userTyroServLoad->auth_nb;
+            $nbChiffre = $this->ts_token->publicChiffre($userTyroServLoad->auth_nb);;
             $tokenChiffre = $this->ts_token->publicChiffre($userTyroServLoad->token);
-            var_dump($nbChiffre, $tokenChiffre);
 
-            if($auth_nbChiffre == $nbChiffre){ $isNbVerif = true; }
+            if($auth_nbChiffre == $nbChiffre['current'] || $auth_nbChiffre == $nbChiffre['old']){ $isNbVerif = true; }
 
             if($auth_tokenChiffre == $tokenChiffre['current'] || $auth_tokenChiffre == $tokenChiffre['old']){ $isTokenVerif = true; }
 

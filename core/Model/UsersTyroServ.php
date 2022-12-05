@@ -98,6 +98,28 @@ class UsersTyroServ extends Model
     }
 
 
+    /**
+     * 
+     * CreateUser
+     * 
+     */
+    function createUser($newUserTS)
+    {
+        $resultat =  $this->pdo->prepare("INSERT INTO {$this->table} (idUsers, pseudo, sanction, auth_nb, auth_date, token) VALUES (:idUsers, :pseudo, :sanction, :auth_nb, :auth_date, :token)");
+        $resultat->execute([
+            "idUsers" => $newUserTS[0],
+            "pseudo"=> $newUserTS[1],
+            "sanction"=> $newUserTS[2],
+            "auth_nb"=> $newUserTS[3],
+            "auth_date"=> $newUserTS[4],
+            "token"=> $newUserTS[5] 
+        ]);
+
+        $userTyroServ = $resultat->fetchObject();
+
+    }
+
+
 
 
 

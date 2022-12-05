@@ -26,8 +26,8 @@ class TokenTyroServ extends Model
         $tokenPrivateCryptSalt = $tokenPrivateCrypt.md5($key);
 
         $tokenPublic = $this->recupTokenPublic();
-        $tokenPrivateCryptSalt_tokenPublic = $tokenPrivateCryptSalt.md5($tokenPublic[0]);
-        $tokenPrivateCryptSalt_tokenPublicOld = $tokenPrivateCryptSalt.md5($tokenPublic[1]);
+        $tokenPrivateCryptSalt_tokenPublic = $tokenPrivateCryptSalt.md5($tokenPublic[0]->tokenPublic);
+        $tokenPrivateCryptSalt_tokenPublicOld = $tokenPrivateCryptSalt.md5($tokenPublic[1]->tokenPublic);
 
 
         return ["current" => $tokenPrivateCryptSalt_tokenPublic, "old" => $tokenPrivateCryptSalt_tokenPublicOld];

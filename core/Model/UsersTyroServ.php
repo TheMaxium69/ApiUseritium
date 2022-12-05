@@ -25,7 +25,7 @@ class UsersTyroServ extends Model
      */
     function findByIdUsers($idUsers)
     {
-        $resultat =  $this->pdo->prepare('SELECT * FROM users_tyroserv WHERE idUsers = :idUsers');
+        $resultat =  $this->pdo->prepare("SELECT * FROM {$this->table} WHERE idUsers = :idUsers");
         $resultat->execute([
             "idUsers"=> $idUsers
         ]);
@@ -42,7 +42,7 @@ class UsersTyroServ extends Model
      */
     function findByPseudo($pseudo)
     {
-        $resultat =  $this->pdo->prepare('SELECT * FROM users_tyroserv WHERE pseudo = :pseudo');
+        $resultat =  $this->pdo->prepare("SELECT * FROM {$this->table} WHERE pseudo = :pseudo");
         $resultat->execute([
             "pseudo"=> $pseudo
         ]);
@@ -81,7 +81,7 @@ class UsersTyroServ extends Model
 
 
         // insert bdd
-        $requestUpdate = $this->pdo->prepare("UPDATE users_tyroserv SET auth_nb = :newNbAuth , auth_date = :newDateJson WHERE idTyroServ = :id");
+        $requestUpdate = $this->pdo->prepare("UPDATE {$this->table} SET auth_nb = :newNbAuth , auth_date = :newDateJson WHERE idTyroServ = :id");
 
         $requestUpdate->execute([
             'id' => $id,

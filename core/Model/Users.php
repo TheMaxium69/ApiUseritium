@@ -24,7 +24,7 @@ class Users extends Model
      */
     function findByEmail(string $email)
     {
-        $resultat =  $this->pdo->prepare('SELECT * FROM users WHERE email = :email');
+        $resultat =  $this->pdo->prepare("SELECT * FROM {$this->table} WHERE email = :email");
         $resultat->execute([
             "email"=> $email
         ]);

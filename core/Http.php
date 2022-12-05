@@ -4,8 +4,6 @@ class Http
 {
 
 /**
- * 
- * redirige vers l'url passé en parametre
  * @param string $url
  */
 

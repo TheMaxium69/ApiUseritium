@@ -8,8 +8,6 @@ class Rendering
 
         /**
          * 
-         * genere le rendu de données interpolées dans un template
-         * 
          * @param string $template
          * @param array $donnees
          * 

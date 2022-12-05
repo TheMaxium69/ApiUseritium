@@ -5,8 +5,9 @@ namespace Controllers;
 class TyroServ extends Controller
 {
 
-    protected $modelName = \Model\Users::class;
-    protected $modelName2 = \Model\UsersTyroServ::class;
+    protected $modelDefault = \Model\Users::class;
+    protected $modelTyroServUser = \Model\UsersTyroServ::class;
+    protected $modelTyroServToken = \Model\TokenTyroServ::class;
 
     /**
      * 
@@ -38,25 +39,25 @@ class TyroServ extends Controller
             $email_auth = $_POST['email_useritium'];
             $mdp_auth = $_POST['mdp_useritium'];
 
-            $userLoad = $this->model->findByEmail($email_auth);       
+            $userLoad = $this->default->findByEmail($email_auth);       
 
             if (!empty($userLoad)){
 
-                $mdpCrypt_auth = $this->model->chiffreMdp($mdp_auth);
+                $mdpCrypt_auth = $this->default->chiffreMdp($mdp_auth);
 
                 if($mdpCrypt_auth == $userLoad->password){
                     
-                    $userTyroServLoad = $this->model2->findByIdUsers($userLoad->id);
+                    $userTyroServLoad = $this->ts_user->findByIdUsers($userLoad->id);
 
                     if($userTyroServLoad){
 
                         date_default_timezone_set('Europe/Paris');
                         $dateAuth = date('d-m-y h:i:s A');
                         
-                        $resultNewConnexion = $this->model2->newConnexion($dateAuth, $userTyroServLoad->auth_nb, $userTyroServLoad->auth_date, $userTyroServLoad->idTyroServ);
+                        $resultNewConnexion = $this->ts_user->newConnexion($dateAuth, $userTyroServLoad->auth_nb, $userTyroServLoad->auth_date, $userTyroServLoad->idTyroServ);
                         
-                        $nbAuthChiffre = /*$this->model3->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $resultNewConnexion["newNbAuth"];
-                        $tokenChiffre = /*$this->model3->publicChiffre($userTyroServLoad->token);*/ $userTyroServLoad->token;
+                        $nbAuthChiffre = /*$this->ts_token->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $resultNewConnexion["newNbAuth"];
+                        $tokenChiffre = /*$this->ts_token->publicChiffre($userTyroServLoad->token);*/ $userTyroServLoad->token;
 
                         $resultLauncher = ["pseudo" => $userTyroServLoad->pseudo, 
                                            "sanction"=> $userTyroServLoad->sanction, 
@@ -64,12 +65,12 @@ class TyroServ extends Controller
                                            "tokenTwo"=> $nbAuthChiffre,];
                         
                         header('Access-Control-Allow-Origin: *');
-                        echo json_encode(["status"=>"true","why"=>"first connexion","task"=>"firstConnect","result"=>$resultLauncher]);
+                        echo json_encode(["status"=>"true","result"=>$resultLauncher]);
 
                     } else {
 
                         header('Access-Control-Allow-Origin: *');
-                        echo json_encode(["status"=>"true","why"=>"first connexion","task"=>"firstConnect"]);
+                        echo json_encode(["status"=>"true","why"=>"first connexion","task"=>"controller=tyroserv&task=firstConnect"]);
 
                     }
 
@@ -128,16 +129,16 @@ class TyroServ extends Controller
             $auth_tokenChiffre = $_POST['token'];
             $auth_nbChiffre = $_POST['tokenTwo'];
 
-            $userTyroServLoad = $this->model2->findByPseudo($pseudo);
+            $userTyroServLoad = $this->ts_user->findByPseudo($pseudo);
             var_dump($userTyroServLoad);
 
-            $nbChiffre = /*$this->model3->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $userTyroServLoad->auth_nb;
-            $tokenChiffre = /*$this->model3->publicChiffre($userTyroServLoad->token);*/ $userTyroServLoad->token;
+            $nbChiffre = /*$this->ts_token->publicChiffre($resultNewConnexion["newNbAuth"]);*/ $userTyroServLoad->auth_nb;
+            $tokenChiffre = $this->ts_token->publicChiffre($userTyroServLoad->token);
             var_dump($nbChiffre, $tokenChiffre);
 
             if($auth_nbChiffre == $nbChiffre){ $isNbVerif = true; }
 
-            if($auth_tokenChiffre == $tokenChiffre){ $isTokenVerif = true; }
+            if($auth_tokenChiffre == $tokenChiffre['current'] || $auth_tokenChiffre == $tokenChiffre['old']){ $isTokenVerif = true; }
 
             if($isTokenVerif == true && $isNbVerif == true){ $reponse = ["status"=>"true","auth_pseudo"=>$pseudo]; }
             else {

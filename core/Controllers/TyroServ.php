@@ -65,7 +65,7 @@ class TyroServ extends Controller
                                            "tokenTwo"=> $nbAuthChiffre['current'],];
                         
                         header('Access-Control-Allow-Origin: *');
-                        echo json_encode(["status"=>"true","result"=>$resultLauncher]);
+                        echo json_encode(["status"=>"true","why"=>"successfully connected","result"=>$resultLauncher]);
 
                     } else {
 

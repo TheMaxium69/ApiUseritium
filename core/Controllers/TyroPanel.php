@@ -14,7 +14,7 @@ class TyroPanel extends Controller
     public function index()
     {
 
-        $message = "Bienvenue dans l'API Useritium pour TyroPanel";
+        $message = "Bienvenue dans l'API Useritium pour TyroPanel administrateur";
 
         header('Access-Control-Allow-Origin: *');
         echo json_encode($message);

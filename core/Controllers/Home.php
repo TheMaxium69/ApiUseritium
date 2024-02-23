@@ -5,6 +5,10 @@ namespace Controllers;
 class Home extends Controller
 {
 
+    protected $modelDefault = \Model\Users::class;
+    protected $modelTyroServUser = \Model\UsersTyroServ::class;
+    protected $modelTyroServToken = \Model\TokenTyroServ::class;
+
     /**
      * 
      * Wiew index

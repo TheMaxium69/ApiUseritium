@@ -36,6 +36,23 @@ class Users extends Model
         return $user;
     }
 
+    /**
+     *
+     * FindByUsername
+     *
+     */
+    function findByUsername(string $username)
+    {
+        $resultat =  $this->pdo->prepare("SELECT * FROM {$this->table} WHERE username = :username");
+        $resultat->execute([
+            "username"=> $username
+        ]);
+
+        $user = $resultat->fetchObject();
+
+        return $user;
+    }
+
 
     /**
      * 

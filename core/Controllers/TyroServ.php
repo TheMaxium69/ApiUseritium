@@ -171,13 +171,13 @@ class TyroServ extends Controller
     public function connectToken()
     {
 
-        if(!empty($_POST['token_useritium']) && !empty($_POST['email_useritium']))
+        if(!empty($_POST['token_useritium']) && !empty($_POST['username_useritium']))
         {
-            
-            $token_auth = $_POST['token_useritium'];
-            $email_auth = $_POST['email_useritium'];
 
-            $userLoad = $this->default->findByEmail($email_auth);
+            $token_auth = $_POST['token_useritium'];
+            $username_auth = $_POST['username_useritium'];
+
+            $userLoad = $this->default->findByUsername($username_auth);
 
             if (!empty($userLoad)){
 

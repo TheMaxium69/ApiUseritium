@@ -163,6 +163,86 @@ class TyroServ extends Controller
     }
 
     /**
+     *
+     * Connect Token TyroServ Launcher
+     * @method : post
+     *
+     */
+    public function connectToken()
+    {
+
+        if(!empty($_POST['token_useritium']) && !empty($_POST['email_useritium']))
+        {
+            
+            $token_auth = $_POST['token_useritium'];
+            $email_auth = $_POST['email_useritium'];
+
+            $userLoad = $this->default->findByEmail($email_auth);
+
+            if (!empty($userLoad)){
+
+                $userTyroServLoad = $this->ts_user->findByIdUsers($userLoad->id);
+
+                    if($userTyroServLoad){
+
+                        $tokenChiffre = $this->ts_token->publicChiffre($userTyroServLoad->token);
+
+                        if ($tokenChiffre['current'] !== $token_auth) {
+
+                            header('Access-Control-Allow-Origin: *');
+                            echo json_encode(["status"=>"err","why"=>"bad token"]);
+
+                            exit();
+
+                        }
+
+                        date_default_timezone_set('Europe/Paris');
+                        $dateAuth = date('d-m-y h:i:s A');
+
+                        $resultNewConnexion = $this->ts_user->newConnexion($dateAuth, $userTyroServLoad->auth_nb, $userTyroServLoad->auth_date, $userTyroServLoad->idTyroServ);
+
+                        $nbAuthChiffre = $this->ts_token->publicChiffre($resultNewConnexion["newNbAuth"]);
+                        $tokenChiffre = $this->ts_token->publicChiffre($userTyroServLoad->token);
+
+                        $resultLauncher = ["pseudo" => $userTyroServLoad->pseudo,
+                                           "sanction"=> $userTyroServLoad->sanction,
+                                           "token"=> $tokenChiffre['current'],
+                                           "tokenTwo"=> $nbAuthChiffre['current'],
+                                           "skin"=>$userTyroServLoad->skin,
+                                           "useritium"=>[
+                                               "pp"=>$userLoad->pp,
+                                               "username"=>$userLoad->username,
+                                               "displayname"=>$userLoad->displayname,
+                        ]];
+
+                        header('Access-Control-Allow-Origin: *');
+                        echo json_encode(["status"=>"true","why"=>"successfully connected","result"=>$resultLauncher]);
+
+                    } else {
+
+                        header('Access-Control-Allow-Origin: *');
+                        echo json_encode(["status"=>"err","why"=>"bdd erreur"]);
+
+                    }
+
+
+            } else {
+
+                header('Access-Control-Allow-Origin: *');
+                echo json_encode(["status"=>"err","why"=>"non-existent account"]);
+
+            }
+
+
+        } else {
+
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
+
+        }
+    }
+
+    /**
      * 
      * Verification Serveur
      * @method : post

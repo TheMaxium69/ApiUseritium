@@ -4,6 +4,7 @@
 
 require_once "core/autoloading.php";
 
+header('Content-Type: application/json');
 
 \App::process();
 

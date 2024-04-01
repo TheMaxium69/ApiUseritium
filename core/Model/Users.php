@@ -15,6 +15,8 @@ class Users extends Model
     public $email;
     private $password;
     public $role;
+    public $pp;
+
 
 
     /**

@@ -16,6 +16,7 @@ class UsersTyroServ extends Model
     public $auth_nb;
     public $auth_date;
     private $token;
+    private $skin;
 
 
     /**

@@ -62,7 +62,13 @@ class TyroServ extends Controller
                         $resultLauncher = ["pseudo" => $userTyroServLoad->pseudo, 
                                            "sanction"=> $userTyroServLoad->sanction, 
                                            "token"=> $tokenChiffre['current'],
-                                           "tokenTwo"=> $nbAuthChiffre['current'],];
+                                           "tokenTwo"=> $nbAuthChiffre['current'],
+                                           "skin"=>$userTyroServLoad->skin,
+                                           "useritium"=>[
+                                               "pp"=>$userLoad->pp,
+                                               "username"=>$userLoad->username,
+                                               "displayname"=>$userLoad->displayname,
+                        ]];
                         
                         header('Access-Control-Allow-Origin: *');
                         echo json_encode(["status"=>"true","why"=>"successfully connected","result"=>$resultLauncher]);

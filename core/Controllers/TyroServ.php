@@ -317,6 +317,98 @@ class TyroServ extends Controller
     
     }
 
+    /**
+     *
+     * Connection TyroServ AdminPanel
+     * @method : post
+     *
+     */
+    public function connectPanelAdmin()
+    {
+
+        if(!empty($_POST['email_useritium']) && !empty($_POST['mdp_useritium'])) {
+
+            $email_auth = $_POST['email_useritium'];
+            $mdp_auth = $_POST['mdp_useritium'];
+
+            $userLoad = $this->default->findByEmail($email_auth);
+
+            if (!empty($userLoad)){
+
+                $mdpCrypt_auth = $this->default->chiffreMdp($mdp_auth);
+
+                if($mdpCrypt_auth == $userLoad->password){
+
+                    $userTyroServLoad = $this->ts_user->findByIdUsers($userLoad->id);
+
+                    if($userTyroServLoad){
+
+                        $pseudoConencte = $userTyroServLoad->pseudo;
+
+
+                        $Object_pseudo_admin = [
+                            "TheMaximeSan",
+                        ];
+
+                        foreach ($Object_pseudo_admin as $pseudo_admin) {
+
+                            if ($pseudoConencte == $pseudo_admin){
+
+                                $resultPanel = [
+                                    "pseudo" => $userTyroServLoad->pseudo,
+                                    "useritium"=>[
+                                        "pp"=>$userLoad->pp,
+                                        "username"=>$userLoad->username,
+                                        "displayname"=>$userLoad->displayname,
+                                    ]];
+
+                                header('Access-Control-Allow-Origin: *');
+                                echo json_encode(["status"=>"true","why"=>"successfully connected","result"=>$resultPanel]);
+                                exit();
+
+                            }
+
+                        }
+
+                        header('Access-Control-Allow-Origin: *');
+                        echo json_encode(["status"=>"err","why"=>"non admin"]);
+
+
+                    } else {
+
+                        header('Access-Control-Allow-Origin: *');
+                        echo json_encode(["status"=>"err","why"=>"non-existent account tyroserv"]);
+
+                    }
+
+                } else {
+
+                    header('Access-Control-Allow-Origin: *');
+                    echo json_encode(["status"=>"err","why"=>"bad password"]);
+
+                }
+
+
+            } else {
+
+                header('Access-Control-Allow-Origin: *');
+                echo json_encode(["status"=>"err","why"=>"non-existent account"]);
+
+            }
+
+
+        } else {
+
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
+
+        }
+
+
+
+
+    }
+
 
 
 

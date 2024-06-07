@@ -437,8 +437,10 @@ class TyroServ extends Controller
                 } else {
 
                     header('Access-Control-Allow-Origin: *');
-                    echo json_encode(["status"=>"true","why"=>"successfully request","result"=>"no info"]);
-
+                    echo json_encode(["status"=>"true","why"=>"successfully request","result"=>[
+                        "skin"=>"vide",
+                        "slim"=>$userTyroServLoad->slim,
+                    ]]);
                 }
 
 

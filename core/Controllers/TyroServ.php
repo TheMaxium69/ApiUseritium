@@ -409,6 +409,60 @@ class TyroServ extends Controller
 
     }
 
+    /**
+     *
+     * Get Skin By Pseudo
+     * @method : post
+     *
+     */
+    public function getSkinByPseudo()
+    {
+
+        if(!empty($_GET['pseudo'])) {
+
+            $pseudo = $_GET['pseudo'];
+
+            $userTyroServLoad = $this->ts_user->findByPseudo($pseudo);
+
+            if ($userTyroServLoad) {
+
+                if ($userTyroServLoad->skin){
+
+                    header('Access-Control-Allow-Origin: *');
+                    echo json_encode(["status"=>"true","why"=>"successfully request","result"=>[
+                        "skin"=>$userTyroServLoad->skin,
+                        "slim"=>$userTyroServLoad->slim,
+                    ]]);
+
+                } else {
+
+                    header('Access-Control-Allow-Origin: *');
+                    echo json_encode(["status"=>"true","why"=>"successfully request","result"=>"no info"]);
+
+                }
+
+
+
+            } else {
+
+                header('Access-Control-Allow-Origin: *');
+                echo json_encode(["status"=>"err","why"=>"non-existent pseudo"]);
+
+            }
+
+
+        } else {
+
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
+
+        }
+
+
+
+
+    }
+
 
 
 

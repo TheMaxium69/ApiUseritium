@@ -17,6 +17,7 @@ class UsersTyroServ extends Model
     public $auth_date;
     private $token;
     private $skin;
+    private $slim;
 
 
     /**
@@ -119,7 +120,6 @@ class UsersTyroServ extends Model
         $userTyroServ = $resultat->fetchObject();
 
     }
-
 
 
 

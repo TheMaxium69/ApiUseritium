@@ -465,6 +465,60 @@ class TyroServ extends Controller
 
     }
 
+    /**
+     *
+     * Get Cape By Pseudo
+     * @method : post
+     *
+     */
+    public function getCapeByPseudo()
+    {
+
+        if(!empty($_GET['pseudo'])) {
+
+            $pseudo = $_GET['pseudo'];
+
+            $userTyroServLoad = $this->ts_user->findByPseudo($pseudo);
+
+            if ($userTyroServLoad) {
+
+                if ($userTyroServLoad->cape){
+
+                    header('Access-Control-Allow-Origin: *');
+                    echo json_encode(["status"=>"true","why"=>"successfully request","result"=>[
+                        "cape"=>$userTyroServLoad->cape,
+                    ]]);
+
+                } else {
+
+                    header('Access-Control-Allow-Origin: *');
+                    echo json_encode(["status"=>"true","why"=>"successfully request","result"=>[
+                        "cape"=>$userTyroServLoad->cape,
+                    ]]);
+                }
+
+
+
+            } else {
+
+                header('Access-Control-Allow-Origin: *');
+                echo json_encode(["status"=>"err","why"=>"non-existent pseudo"]);
+
+            }
+
+
+        } else {
+
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
+
+        }
+
+
+
+
+    }
+
 
 
 

@@ -519,6 +519,158 @@ class TyroServ extends Controller
 
     }
 
+    /**
+     *
+     * Change Skin With TyroServ.fr
+     * @method : post
+     *
+     */
+    public function changeSkin()
+    {
+
+    }
+
+    /**
+     *
+     * Change Skin With TyroServ.fr
+     * @method : post
+     *
+     */
+    public function changeCape()
+    {
+
+        if(!empty($_POST['token_useritium']) && !empty($_POST['username_useritium']) && !empty($_POST['new_cape_id']) && filter_var($_POST['new_cape_id'], FILTER_VALIDATE_INT) !== false) {
+
+            $token_auth = $_POST['token_useritium'];
+            $username_auth = $_POST['username_useritium'];
+            $new_cape_id = (int)$_POST['new_cape_id'];
+
+            $userLoad = $this->default->findByUsername($username_auth);
+
+            if (!empty($userLoad)) {
+
+                $userTyroServLoad = $this->ts_user->findByIdUsers($userLoad->id);
+
+                if ($userTyroServLoad) {
+
+                    $tokenChiffre = $this->ts_token->publicChiffre($userTyroServLoad->token);
+
+                    if ($tokenChiffre['current'] !== $token_auth) {
+
+                        header('Access-Control-Allow-Origin: *');
+                        echo json_encode(["status" => "err", "why" => "bad token"]);
+
+                        exit();
+
+                    } else {
+
+                        $apiUrl = "http://vps214.tyrolium.fr/capes/player.php?pseudo=". $userTyroServLoad->pseudo ."&idCapeUseritium=" . $userTyroServLoad->cape ;
+
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                            'Content-Type: application/json',
+                            'Accept: application/json'
+                        ]);
+
+                        $response = curl_exec($ch);
+                        if (curl_errno($ch)) {
+//                            echo 'Erreur cURL: ' . curl_error($ch);
+                            header('Access-Control-Allow-Origin: *');
+                            echo json_encode(["status"=>"err","why"=>"err api cape - E01"]);
+                        } else {
+                            curl_close($ch);
+
+                            $dataApiCape = json_decode($response, true);
+
+                            if (json_last_error() === JSON_ERROR_NONE) {
+
+
+                                if (empty($dataApiCape)){
+
+                                    header('Access-Control-Allow-Origin: *');
+                                    echo json_encode(["status"=>"err","why"=>"user no cape"]);
+
+                                } else {
+
+
+                                    $exists = false;
+
+                                    foreach ($dataApiCape as $item) {
+                                        if ($item['idCapes'] == $new_cape_id) {
+                                            $exists = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if ($exists) {
+
+
+
+
+                                        /* PUSH LA NEW CAPE*/
+
+
+
+
+                                        header('Access-Control-Allow-Origin: *');
+                                        echo json_encode(["status"=>"true","why"=>"successfully request","result"=>[
+                                            "oldCapeID"=>$userTyroServLoad->cape,
+                                            "newCapeID" =>$new_cape_id
+                                        ]]);
+                                    } else {
+                                        header('Access-Control-Allow-Origin: *');
+                                        echo json_encode(["status" => "err", "why" => "non-existent cape"]);
+                                    }
+
+                                }
+
+                            } else {
+//                                echo 'Erreur de décodage JSON: ' . json_last_error_msg();
+                                header('Access-Control-Allow-Origin: *');
+                                echo json_encode(["status"=>"err","why"=>"err api cape - E02"]);
+                            }
+                        }
+
+                    }
+
+                } else {
+
+                    header('Access-Control-Allow-Origin: *');
+                    echo json_encode(["status"=>"err","why"=>"bdd erreur"]);
+
+                }
+
+
+            } else {
+
+                header('Access-Control-Allow-Origin: *');
+                echo json_encode(["status"=>"err","why"=>"non-existent account"]);
+
+            }
+
+
+
+
+
+
+
+
+
+        } else {
+
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
+
+        }
+
+
+
+
+
+
+    }
 
 
 

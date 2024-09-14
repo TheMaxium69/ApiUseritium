@@ -121,6 +121,21 @@ class UsersTyroServ extends Model
 
     }
 
+    /*
+     *
+     * ChangeCape
+     *
+     * */
+    function changeCape($idTyroServ, $idNewCape){
+
+        $resultat = $this->pdo->prepare("UPDATE {$this->table} SET cape = :idNewCape WHERE idTyroServ = :idTyroServ");
+        $resultat->execute([
+            "idNewCape" => $idNewCape,
+            "idTyroServ" => $idTyroServ
+        ]);
+
+    }
+
 
 
 

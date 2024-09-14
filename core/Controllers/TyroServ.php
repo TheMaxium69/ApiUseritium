@@ -606,13 +606,8 @@ class TyroServ extends Controller
 
                                     if ($exists) {
 
-
-
-
                                         /* PUSH LA NEW CAPE*/
-
-
-
+                                        $this->ts_user->changeCape($userTyroServLoad->idTyroServ, $new_cape_id);
 
                                         header('Access-Control-Allow-Origin: *');
                                         echo json_encode(["status"=>"true","why"=>"successfully request","result"=>[
@@ -650,25 +645,12 @@ class TyroServ extends Controller
 
             }
 
-
-
-
-
-
-
-
-
         } else {
 
             header('Access-Control-Allow-Origin: *');
             echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
 
         }
-
-
-
-
-
 
     }
 

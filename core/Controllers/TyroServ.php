@@ -532,7 +532,7 @@ class TyroServ extends Controller
 
     /**
      *
-     * Change Skin With TyroServ.fr
+     * Change Cape With TyroServ.fr
      * @method : post
      *
      */

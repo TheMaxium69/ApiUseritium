@@ -521,6 +521,43 @@ class TyroServ extends Controller
 
     /**
      *
+     * Get Player by Pseudo TyroServ.fr
+     * @method : post
+     *
+     */
+    public function player()
+    {
+
+        if (!empty($_GET['pseudo'])) {
+
+            $pseudo = $_GET['pseudo'];
+
+            $userTyroServLoad = $this->ts_user->findByPseudo($pseudo);
+
+            if ($userTyroServLoad) {
+
+                header('Access-Control-Allow-Origin: *');
+                echo json_encode(["status"=>"true","why"=>"player is good","result"=>[
+                    "pseudo"=>$userTyroServLoad->pseudo,
+                ]]);
+
+            }  else {
+
+                header('Access-Control-Allow-Origin: *');
+                echo json_encode(["status"=>"err","why"=>"non-existent pseudo"]);
+
+            }
+
+        } else {
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
+        }
+
+
+    }
+
+    /**
+     *
      * Change Skin With TyroServ.fr
      * @method : post
      *

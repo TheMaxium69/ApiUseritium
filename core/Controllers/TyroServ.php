@@ -641,7 +641,7 @@ class TyroServ extends Controller
                                         }
                                     }
 
-                                    if ($exists) {
+                                    if ($exists || $new_cape_id == "99999999") {
 
                                         /* PUSH LA NEW CAPE*/
                                         $this->ts_user->changeCape($userTyroServLoad->idTyroServ, $new_cape_id);

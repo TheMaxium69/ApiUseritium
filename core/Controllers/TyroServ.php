@@ -565,6 +565,98 @@ class TyroServ extends Controller
     public function changeSkin()
     {
 
+        if (!empty($_POST['token_useritium']) && !empty($_POST['username_useritium'])){
+
+            $token_auth = $_POST['token_useritium'];
+            $username_auth = $_POST['username_useritium'];
+
+            $userLoad = $this->default->findByUsername($username_auth);
+
+            if (!empty($userLoad)) {
+
+                $userTyroServLoad = $this->ts_user->findByIdUsers($userLoad->id);
+
+                if ($userTyroServLoad) {
+
+                    $tokenChiffre = $this->ts_token->publicChiffre($userTyroServLoad->token);
+
+                    if ($tokenChiffre['current'] !== $token_auth) {
+
+                        header('Access-Control-Allow-Origin: *');
+                        echo json_encode(["status" => "err", "why" => "bad token"]);
+
+                        exit();
+
+                    } else {
+
+                        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                            $image = $_FILES['image']['tmp_name'];
+
+                            if (exif_imagetype($image) == IMAGETYPE_PNG) {
+                                $imageSize = getimagesize($image);
+                                if ($imageSize[0] === 64 && $imageSize[1] === 64) {
+
+
+                                    $upload_dir = '/home/maxime/Developpement/localhost/www/Useritium-WebSite/uploads/skin/';
+                                    // $upload_dir = '/home/gamenit/useritium/uploads/skin/';
+                                    $image_name = uniqid() . '_' . $userLoad->id . '.png';
+                                    $upload_file = $upload_dir . $image_name;
+
+                                    if (move_uploaded_file($image, $upload_file)) {
+
+                                        $filename = basename($upload_file);
+                                        $idEdit = $userLoad->id;
+
+                                        $this->ts_user->changeSkin($filename, $idEdit);
+
+                                        header('Access-Control-Allow-Origin: *');
+                                        echo json_encode(["status" => "true", "why" => "image uploaded and stored successfully", "result" => [
+                                            'skin_name' => $image_name
+                                        ]]);
+                                    } else {
+                                        header('Access-Control-Allow-Origin: *');
+                                        echo json_encode(["status" => "err", "why" => "error storing the file"]);
+                                    }
+
+                                } else {
+                                    header('Access-Control-Allow-Origin: *');
+                                    echo json_encode(["status" => "err", "why" => "image dimensions are not 64x64"]);
+                                }
+                            } else {
+                                header('Access-Control-Allow-Origin: *');
+                                echo json_encode(["status" => "err", "why" => "image is not a PNG file"]);
+                            }
+
+                        } else {
+                            // Handle missing file or upload error
+                            header('Access-Control-Allow-Origin: *');
+                            echo json_encode(["status" => "err", "why" => "image not provided or upload error"]);
+                        }
+
+                    }
+
+                } else {
+
+                    header('Access-Control-Allow-Origin: *');
+                    echo json_encode(["status"=>"err","why"=>"bdd erreur"]);
+
+                }
+
+
+            } else {
+
+                header('Access-Control-Allow-Origin: *');
+                echo json_encode(["status"=>"err","why"=>"non-existent account"]);
+
+            }
+
+        } else {
+
+            header('Access-Control-Allow-Origin: *');
+            echo json_encode(["status"=>"err","why"=>"indefinite fields"]);
+
+        }
+
     }
 
     /**

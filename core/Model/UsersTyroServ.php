@@ -136,6 +136,21 @@ class UsersTyroServ extends Model
 
     }
 
+    /*
+     *
+     * ChangeSkin
+     *
+     * */
+    function changeSkin($skinUrl, $idEdit){
+
+        $resultat = $this->pdo->prepare("UPDATE {$this->table} SET skin = :skinUrl WHERE idUsers = :idEdit");
+        $resultat->execute([
+            "skinUrl" => $skinUrl,
+            "idEdit" => $idEdit
+        ]);
+
+    }
+
 
 
 

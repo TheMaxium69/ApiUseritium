@@ -814,7 +814,7 @@ class TyroServ extends Controller
 
         header('Access-Control-Allow-Origin: *');
         echo json_encode(["status"=>"true","why"=>"successfully request","result"=>[
-            "count"=>$count
+            "count" => (int)$count
         ]]);
 
     }

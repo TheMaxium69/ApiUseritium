@@ -564,6 +564,9 @@ class TyroServ extends Controller
      */
     public function changeSkin()
     {
+//        var_dump($_POST);
+//        var_dump($_REQUEST);
+//        var_dump($_FILES);
 
         if (!empty($_POST['token_useritium']) && !empty($_POST['username_useritium'])){
 
@@ -594,7 +597,7 @@ class TyroServ extends Controller
 
                             if (exif_imagetype($image) == IMAGETYPE_PNG) {
                                 $imageSize = getimagesize($image);
-                                if ($imageSize[0] === 64 && $imageSize[1] === 64) {
+                                if (($imageSize[0] === 64 && $imageSize[1] === 64) || ($imageSize[0] === 64 && $imageSize[1] === 32)) {
 
 
                                     $upload_dir = '/home/maxime/Developpement/localhost/www/Useritium-WebSite/uploads/skin/';
@@ -620,7 +623,7 @@ class TyroServ extends Controller
 
                                 } else {
                                     header('Access-Control-Allow-Origin: *');
-                                    echo json_encode(["status" => "err", "why" => "image dimensions are not 64x64"]);
+                                    echo json_encode(["status" => "err", "why" => "image dimensions are not 64x64 or 64x32"]);
                                 }
                             } else {
                                 header('Access-Control-Allow-Origin: *');
@@ -628,9 +631,23 @@ class TyroServ extends Controller
                             }
 
                         } else {
-                            // Handle missing file or upload error
-                            header('Access-Control-Allow-Origin: *');
-                            echo json_encode(["status" => "err", "why" => "image not provided or upload error"]);
+
+
+                            if (!empty($_POST['reset_skin'])){
+
+                                $this->ts_user->resetSkin($userLoad->id);
+                                header('Access-Control-Allow-Origin: *');
+                                echo json_encode(["status" => "true", "why" => "skin reset successfully"]);
+
+
+                            } else {
+
+                                // Handle missing file or upload error
+                                header('Access-Control-Allow-Origin: *');
+                                echo json_encode(["status" => "err", "why" => "image not provided or upload error"]);
+
+                            }
+
                         }
 
                     }

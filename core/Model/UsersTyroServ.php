@@ -151,6 +151,20 @@ class UsersTyroServ extends Model
 
     }
 
+    /*
+     *
+     * ResetSkin
+     *
+     * */
+    function resetSkin($idEdit){
+
+        $resultat = $this->pdo->prepare("UPDATE {$this->table} SET skin = null WHERE idUsers = :idEdit");
+        $resultat->execute([
+            "idEdit" => $idEdit
+        ]);
+
+    }
+
 
 
 

@@ -70,7 +70,19 @@ class Users extends Model
 
     }
 
+    /*
+     *
+     * Count User
+     *
+     * */
+    function countUser()
+    {
+        $requestCount =  $this->pdo->prepare("SELECT COUNT(*) FROM {$this->table}");
+        $requestCount->execute();
+        $count = $requestCount->fetchColumn();
+        return $count;
 
+    }
 
 
 

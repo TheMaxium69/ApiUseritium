@@ -801,6 +801,23 @@ class TyroServ extends Controller
     }
 
 
+    /**
+     *
+     * Count Player With TyroServ.fr
+     * @method : post
+     *
+     */
+    public function countPlayer()
+    {
+
+        $count = $this->default->countUser();
+
+        header('Access-Control-Allow-Origin: *');
+        echo json_encode(["status"=>"true","why"=>"successfully request","result"=>[
+            "count"=>$count
+        ]]);
+
+    }
 
 }
 

@@ -710,7 +710,7 @@ class TyroServ extends Controller
 
                     } else {
 
-                        $apiUrl = "http://vps214.tyrolium.fr/capes/player.php?pseudo=". $userTyroServLoad->pseudo ."&idCapeUseritium=" . $userTyroServLoad->cape ;
+                        $apiUrl = "https:/api-cape.tyroserv.fr/player.php?pseudo=". $userTyroServLoad->pseudo ."&idCapeUseritium=" . $userTyroServLoad->cape ;
 
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, $apiUrl);

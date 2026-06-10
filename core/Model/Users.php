@@ -16,6 +16,7 @@ class Users extends Model
     private $password;
     public $role;
     public $pp;
+    private $webToken;
 
 
 
@@ -68,6 +69,27 @@ class Users extends Model
 
         return $passwordCryptSalt;
 
+    }
+
+    /**
+     * FindByWebToken
+     */
+    function findByWebToken(string $webToken)
+    {
+        $resultat = $this->pdo->prepare("SELECT * FROM {$this->table} WHERE webtoken = :webToken");
+        $resultat->execute(["webToken" => $webToken]);
+        return $resultat->fetchObject();
+    }
+
+    /**
+     * GenerateWebToken
+     */
+    function generateWebToken(int $id): string
+    {
+        $token = bin2hex(random_bytes(32));
+        $requete = $this->pdo->prepare("UPDATE {$this->table} SET webtoken = :webToken WHERE id = :id");
+        $requete->execute(["webToken" => $token, "id" => $id]);
+        return $token;
     }
 
     /*

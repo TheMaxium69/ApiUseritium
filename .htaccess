@@ -1,0 +1,39 @@
+Options -Indexes
+
+# Charset
+AddDefaultCharset UTF-8
+
+# Rewrite engine
+RewriteEngine On
+RewriteBase /
+
+# Block direct access to core directory
+RewriteRule ^core/ - [F,L]
+
+# Redirect everything to index.php (except existing files)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Security headers
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "no-referrer"
+
+# CORS — adjust origins if needed
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# Handle OPTIONS preflight
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^ - [R=204,L]
+
+# Custom error pages (redirect to useritium.fr)
+ErrorDocument 404 https://useritium.fr/404
+ErrorDocument 403 https://useritium.fr/403
+
+# PHP settings
+php_flag display_errors Off
+php_value error_reporting 0

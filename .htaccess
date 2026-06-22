@@ -3,9 +3,11 @@ Options -Indexes
 RewriteEngine On
 RewriteBase /
 
+RewriteRule ^core/ - [F,L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
+RewriteRule ^$ index.php [QSA,L]
 
 ErrorDocument 404 https://useritium.fr/404
 ErrorDocument 403 https://useritium.fr/403

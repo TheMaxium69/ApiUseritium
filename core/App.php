@@ -19,10 +19,11 @@ class App
             exit;
         }
 
+        $controllerName = ucfirst($_GET['controller']);
         $task = !empty($_GET['task']) ? $_GET['task'] : 'index';
 
         if (!isset(self::$routes[$controllerName]) || !in_array($task, self::$routes[$controllerName], true)) {
-            header('Location: https://useritium.fr/403', true, 302);
+            header('Location: https://useritium.fr/404', true, 302);
             exit;
         }
 

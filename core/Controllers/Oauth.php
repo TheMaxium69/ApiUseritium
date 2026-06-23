@@ -167,16 +167,6 @@ class Oauth extends Controller
             exit;
         }
 
-        // DEBUG TEMPORAIRE — à supprimer après diagnostic
-        file_put_contents(__DIR__ . '/../../../debug.log',
-            date('Y-m-d H:i:s') . ' | METHOD=' . $_SERVER['REQUEST_METHOD']
-            . ' | GET=' . json_encode($_GET)
-            . ' | POST=' . json_encode($_POST)
-            . ' | AUTH=' . ($_SERVER['HTTP_AUTHORIZATION'] ?? 'none')
-            . "\n",
-            FILE_APPEND
-        );
-
         // Odoo (flux implicite) envoie le token en query param ou POST body
         $rawToken = $_GET['access_token']
             ?? $_POST['access_token']
@@ -199,14 +189,12 @@ class Oauth extends Controller
 
         $tokenRow = (new \Model\OauthToken())->findByToken(trim($rawToken));
         if (!$tokenRow) {
-            file_put_contents(__DIR__ . '/../../../debug.log', date('Y-m-d H:i:s') . " | RESPONSE=invalid_token (not found in DB)\n", FILE_APPEND);
             $this->json(['error' => 'invalid_token'], 401);
             return;
         }
 
         $user = $this->default->find((int) $tokenRow->user_id);
         if (!$user) {
-            file_put_contents(__DIR__ . '/../../../debug.log', date('Y-m-d H:i:s') . " | RESPONSE=invalid_token (user not found, user_id={$tokenRow->user_id})\n", FILE_APPEND);
             $this->json(['error' => 'invalid_token'], 401);
             return;
         }
@@ -215,14 +203,12 @@ class Oauth extends Controller
             ? 'https://dashboard.useritium.fr/uploads/pp/' . $user->pp
             : 'https://tyrolium.fr/generate-pp/?c=183153&l=' . strtoupper(substr($user->username, 0, 1));
 
-        $response = [
+        $this->json([
             'sub'     => (string) $user->id,
             'email'   => $user->email,
             'name'    => $user->displayname ?: $user->username,
             'picture' => $picture,
-        ];
-        file_put_contents(__DIR__ . '/../../../debug.log', date('Y-m-d H:i:s') . ' | RESPONSE=' . json_encode($response) . "\n", FILE_APPEND);
-        $this->json($response);
+        ]);
     }
 
     // -------------------------------------------------------------------------

@@ -14,21 +14,16 @@ class App
 
     public static function process()
     {
-        $controllerName = 'Home';
-        $task = 'index';
+        if (empty($_GET['controller'])) {
+            header('Location: https://useritium.fr/403', true, 302);
+            exit;
+        }
 
-        if (!empty($_GET['controller'])) {
-            $controllerName = ucfirst($_GET['controller']);
-        }
-        if (!empty($_GET['task'])) {
-            $task = $_GET['task'];
-        }
+        $task = !empty($_GET['task']) ? $_GET['task'] : 'index';
 
         if (!isset(self::$routes[$controllerName]) || !in_array($task, self::$routes[$controllerName], true)) {
-            http_response_code(404);
-            header('Access-Control-Allow-Origin: *');
-            echo json_encode(["status" => "err", "why" => "not found"]);
-            return;
+            header('Location: https://useritium.fr/403', true, 302);
+            exit;
         }
 
         $controllerClass = "\Controllers\\" . $controllerName;

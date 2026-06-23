@@ -9,6 +9,7 @@ class App
         'TyroServ'  => ['index', /*'connect', 'connectToken', 'servVerif', 'connectPanelAdmin', 'getSkinByPseudo', 'getCapeByPseudo', 'player', 'changeSkin', 'changeCape', 'countPlayer'*/],
         'Gamenium'  => ['index', 'connect'],
         'Other'     => ['index', 'connect'],
+        'Oauth'     => ['authorize', 'token', 'userinfo'],
     ];
 
     public static function process()

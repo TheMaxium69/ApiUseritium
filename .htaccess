@@ -3,7 +3,17 @@ Options -Indexes
 RewriteEngine On
 RewriteBase /
 
+# Passe le header Authorization à PHP (requis pour Bearer token sur /oauth/userinfo)
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+RewriteCond %{HTTP:Authorization} .
+RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
 RewriteRule ^core/ - [F,L]
+
+# Routes OAuth propres (sans query string, compatible Odoo)
+RewriteRule ^oauth/authorize$ index.php?controller=Oauth&task=authorize [QSA,L]
+RewriteRule ^oauth/token$     index.php?controller=Oauth&task=token     [QSA,L]
+RewriteRule ^oauth/userinfo$  index.php?controller=Oauth&task=userinfo  [QSA,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
